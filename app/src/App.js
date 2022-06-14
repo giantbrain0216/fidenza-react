@@ -1,6 +1,11 @@
+import React from 'react';
+import Sketch from 'react-p5';
 import './App.css';
-//import FidenzaSketch from './Sketch/FidenzaSketch';
-import FlowFieldDisplayTest from './Sketch/Tests/FlowFieldDisplayTest';
+import { useControls } from 'leva';
+import FlowFieldDisplayTest from './MySketch/Tests/FlowFieldDisplayTest';
+
+//import FlowFieldDisplayTest from './Sketch/Tests/FlowFieldDisplayTest';
+//TODO: Leva
 
 function App() {
   return (

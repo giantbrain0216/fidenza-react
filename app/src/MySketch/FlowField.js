@@ -1,7 +1,7 @@
 export default function createFlowField(p5) {
     return {
         leftX: 0,
-        leftY: p5.width,
+        rightX: p5.width,
         topY: 0,
         bottomY: p5.height,
         drawResolution: p5.int(p5.width*0.01),
