@@ -2,17 +2,14 @@ import React from "react";
 import Sketch from "react-p5";
 import "./App.css";
 import { useControls } from "leva";
-import FlowFieldDisplayTest from "./MySketch/Tests/FlowFieldDisplayTest";
-
-//import FlowFieldDisplayTest from './Sketch/Tests/FlowFieldDisplayTest';
-//TODO: Leva
+import VectorFieldDisplayTest from "./MySketch/Tests/VectorFieldDisplayTest";
 
 function App() {
   return (
     <div className="App">
-      <h1>Hello worldd</h1>
-      <div style={{ border: "medium solid black" }}>
-        <FlowFieldDisplayTest />
+      <h1>Vector Field Test</h1>
+      <div>
+        <VectorFieldDisplayTest />
       </div>
     </div>
   );
