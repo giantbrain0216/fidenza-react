@@ -19,10 +19,10 @@ export default function createVectorField(p5) {
     isBorderDrawn: true,
     drawMode: drawModes.ARROWS,
 
-    xRange: { min: -3, max: 3 },
-    yRange: { min: -3, max: 3 },
-    fxRange: { min: -p5.PI, max: p5.PI },
-    fyRange: { min: -p5.PI, max: p5.PI },
+    graphDomain: { min: -3, max: 3 },
+    graphRange: { min: -3, max: 3 },
+    fDomain: { min: -p5.PI, max: p5.PI },
+    fRange: { min: -p5.PI, max: p5.PI },
     f: (x, y) => p5.createVector(p5.PI * p5.sin(y), p5.PI * p5.cos(x)),
 
     get width() {
@@ -58,6 +58,9 @@ export default function createVectorField(p5) {
             const c = this.getColorOfV(v);
             p5.fill(c);
             p5.stroke(c);
+          } else {
+            p5.fill(0);
+            p5.stroke(0);
           }
 
           if (!this.isLengthDrawn) {
@@ -73,7 +76,7 @@ export default function createVectorField(p5) {
       }
     },
 
-    getColorOfV(v, scale = 0.6) {
+    getColorOfV(v, scale = 1) {
       const mag = v.mag() * scale;
       return p5.color(mag * 255, 255 - mag * 255, 0);
     },
@@ -123,20 +126,20 @@ export default function createVectorField(p5) {
         x,
         this.dims.leftX,
         this.dims.rightX,
-        this.xRange.min,
-        this.xRange.max
+        this.graphDomain.min,
+        this.graphDomain.max
       );
       const mappedY = p5.map(
         y,
         this.dims.topY,
         this.dims.bottomY,
-        this.yRange.min,
-        this.yRange.max
+        this.graphRange.min,
+        this.graphRange.max
       );
 
       const v = this.f(mappedX, mappedY);
-      const mappedVX = p5.map(v.x, this.fxRange.min, this.fxRange.max, -1, 1);
-      const mappedVY = p5.map(v.y, this.fyRange.min, this.fyRange.max, -1, 1);
+      const mappedVX = p5.map(v.x, this.fDomain.min, this.fDomain.max, -1, 1);
+      const mappedVY = p5.map(v.y, this.fRange.min, this.fRange.max, -1, 1);
       return p5.createVector(mappedVX, mappedVY);
     }
   };
