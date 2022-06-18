@@ -3,6 +3,11 @@ export const drawModes = {
   ARROWS: "ARROWS"
 };
 
+export const funcModes = {
+  PERLIN: "PERLIN",
+  FUNCTION: "FUNCTION"
+};
+
 export default function createVectorField(p5) {
   return {
     dims: {
@@ -21,9 +26,24 @@ export default function createVectorField(p5) {
 
     graphDomain: { min: -3, max: 3 },
     graphRange: { min: -3, max: 3 },
-    fDomain: { min: -p5.PI, max: p5.PI },
-    fRange: { min: -p5.PI, max: p5.PI },
+    funcMode: funcModes.PERLIN,
+
+    fDomain: { min: 0, max: 1 },
+    fRange: { min: 0, max: 1 },
     f: (x, y) => p5.createVector(p5.PI * p5.sin(y), p5.PI * p5.cos(x)),
+
+    perlinLod: 8,
+    perlinFalloff: 0.75,
+    perlinSeed: 42,
+    perlinF: (x, y) => {
+      p5.noiseSeed(this.perlinSeed);
+      p5.noiseDetail(this.perlinLod, this.perlinFalloff);
+      const angle = p5.map(p5.noise(this.noiseSeed + x, y), 0, 1, 0, 2 * p5.PI);
+      const scale = p5.noise(x + this.noiseSeed + 100, y + 100);
+      let v = p5.createVector(0, scale);
+      v.rotate(angle);
+      return v;
+    },
 
     get width() {
       return this.dims.rightX - this.dims.leftX;
@@ -136,8 +156,15 @@ export default function createVectorField(p5) {
         this.graphRange.min,
         this.graphRange.max
       );
+      c;
 
-      const v = this.f(mappedX, mappedY);
+      let v;
+      if (this.funcMode === funcModes.PERLIN) {
+        v = this.perlinF(mappedX, mappedY);
+      } else if (this.funcMode === funcModes.FUNCTION) {
+        v = this.f(mappedX, mappedY);
+      }
+
       const mappedVX = p5.map(v.x, this.fDomain.min, this.fDomain.max, -1, 1);
       const mappedVY = p5.map(v.y, this.fRange.min, this.fRange.max, -1, 1);
       return p5.createVector(mappedVX, mappedVY);
