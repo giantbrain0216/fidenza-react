@@ -3,13 +3,14 @@ import Sketch from "react-p5";
 import "./App.css";
 import { useControls } from "leva";
 import VectorFieldDisplayTest from "./MySketch/Tests/VectorFieldDisplayTest";
+import VectorFieldPerlinTest from "./MySketch/Tests/VectorFieldPerlinTest";
 
 function App() {
   return (
     <div className="App">
       <h1>Vector Field Test</h1>
       <div>
-        <VectorFieldDisplayTest />
+        <VectorFieldPerlinTest />
       </div>
     </div>
   );
