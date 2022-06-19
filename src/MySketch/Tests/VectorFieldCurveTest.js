@@ -1,30 +1,34 @@
 import React from "react";
 import Sketch from "react-p5";
 import createVectorField from "../VectorField";
+import createFidenzaElement from "../FidenzaElement";
+import { makeFidEleGrid } from "../FidenzaElement";
 import { drawModes } from "../VectorField";
 import { useControls } from "leva";
+import palettes from "../ColorPalettes";
 
 let vectorField;
-let curves;
+let elements = [];
 
 export default function VectorFieldPerlinTest(props) {
   // a perlin noise vector field grid is drawn with parameters to inspect sizing, resolution, color, and draw outline features.
 
   const controls = useControls({
     perlinLod: { value: 7, min: 1, max: 20 },
-    perlinFalloff: { value: 0.6, min: 0, max: 1 },
+    perlinFalloff: { value: 0.70, min: 0, max: 1 },
     perlinSeed: { value: 20, min: 0, max: 30 },
-    graphScale: { min: 0, max: 20, value: 4 },
+    graphScale: { min: 0, max: 7, value: 4 },
 
     xDims: { min: 0, max: 800, value: [50, 750] },
     yDims: { min: 0, max: 800, value: [50, 750] },
 
-    drawResolution: { value: 20, min: 45, max: 60 },
+    showVecField: false,
+    drawResolution: { value: 100, min: 0, max: 100 },
     drawVecScale: { value: 10, min: 0, max: 50 },
     drawMode: {
       options: {
-        arrows: drawModes.ARROWS,
         lines: drawModes.LINES,
+        arrows: drawModes.ARROWS
       }
     },
 
@@ -36,7 +40,7 @@ export default function VectorFieldPerlinTest(props) {
     p5.createCanvas(800, 800).parent(canvasParentRef);
     p5.frameRate(30);
     vectorField = createVectorField(p5);
-    curves = [];
+    //elements = makeFidEleGrid(p5, vectorField);
   };
 
   const draw = (p5) => {
@@ -45,19 +49,6 @@ export default function VectorFieldPerlinTest(props) {
     vectorField.perlinLod = controls.perlinLod;
     vectorField.perlinFalloff = controls.perlinFalloff;
     vectorField.perlinSeed = controls.perlinSeed;
-    // vectorField.f = (x, y) => {
-    //   const angle = p5.map(
-    //     p5.noise(controls.noiseSeed + x, y),
-    //     0,
-    //     1,
-    //     0,
-    //     2 * p5.PI
-    //   );
-    //   const scale = p5.noise(x + controls.noiseSeed + 100, y + 100);
-    //   let v = p5.createVector(0, scale);
-    //   v.rotate(angle);
-    //   return v;
-    // };
 
     vectorField.graphDomain = {
       min: -controls.graphScale,
@@ -81,18 +72,24 @@ export default function VectorFieldPerlinTest(props) {
     vectorField.drawMode = controls.drawMode;
     vectorField.drawVecScale = controls.drawVecScale;
 
-    p5.background(255);
+    p5.background(40);
     //p5.circle(50, 50, 40);
     vectorField.setupPerlin();
-    vectorField.drawVisualizer();
-    for (const curve in curves) {
-      curve.draw();
+
+    if(controls.showVecField) {
+      vectorField.drawVisualizer();
+    }
+
+    for (let element of elements) {
+      element.display();
     }
   };
 
-  // const mousePressed = (p5, x, y) => {
-  //   curves.push(createFFCurve(x, y, p5.random(5, 20)));
-  // }
+  const mousePressed = (p5) => {
+    if (p5.mouseX > 50 && p5.mouseX < 750 && p5.mouseY > 50 && p5.mouseY < 750){
+      elements.push(createFidenzaElement(p5, p5.mouseX, p5.mouseY, p5.color(p5.random(palettes.subtle)), p5.random(50), p5.random(20), vectorField)) ;
+    } 
+  }
 
-  return <Sketch setup={setup} draw={draw} />;
+  return <Sketch setup={setup} draw={draw} mousePressed={mousePressed} />;
 }

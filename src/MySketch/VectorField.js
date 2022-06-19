@@ -35,11 +35,13 @@ export default function createVectorField(p5) {
     perlinLod: 8,
     perlinFalloff: 0.75,
     perlinSeed: 42,
-    perlinF: (x, y) => {
+    setupPerlin() {
       p5.noiseSeed(this.perlinSeed);
       p5.noiseDetail(this.perlinLod, this.perlinFalloff);
-      const angle = p5.map(p5.noise(this.noiseSeed + x, y), 0, 1, 0, 2 * p5.PI);
-      const scale = p5.noise(x + this.noiseSeed + 100, y + 100);
+    },
+    perlinF(x, y) {
+      const angle = p5.map(p5.noise(this.perlinSeed + x, y), 0, 1, 0, 2 * p5.PI);
+      const scale = p5.noise(x + this.perlinSeed + 100, y + 100);
       let v = p5.createVector(0, scale);
       v.rotate(angle);
       return v;
@@ -79,8 +81,8 @@ export default function createVectorField(p5) {
             p5.fill(c);
             p5.stroke(c);
           } else {
-            p5.fill(0);
-            p5.stroke(0);
+            p5.fill(255);
+            p5.stroke(255);
           }
 
           if (!this.isLengthDrawn) {
@@ -90,6 +92,7 @@ export default function createVectorField(p5) {
           if (this.drawMode === drawModes.ARROWS) {
             this.drawArrow(pos, v);
           } else if (this.drawMode === drawModes.LINES) {
+            
             this.drawPointAndLine(pos, v);
           }
         }
@@ -156,7 +159,6 @@ export default function createVectorField(p5) {
         this.graphRange.min,
         this.graphRange.max
       );
-      c;
 
       let v;
       if (this.funcMode === funcModes.PERLIN) {

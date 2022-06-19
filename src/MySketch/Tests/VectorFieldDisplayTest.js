@@ -1,7 +1,7 @@
 import React from "react";
 import Sketch from "react-p5";
 import createVectorField from "../VectorField";
-import { drawModes } from "../VectorField";
+import { drawModes, funcModes } from "../VectorField";
 import { useControls } from "leva";
 import { plot } from "@leva-ui/plugin-plot";
 
@@ -41,6 +41,7 @@ export default function VectorFieldDisplayTest(props) {
   };
 
   const draw = (p5) => {
+    vectorField.funcMode = funcModes.FUNCTION;
     vectorField.f = (x, y) =>
       p5.createVector(controls.fOfX(x), controls.fOfY(y));
     vectorField.fDomain = {
