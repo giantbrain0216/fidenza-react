@@ -90,9 +90,6 @@ export default function VectorFieldPerlinTest(props) {
     }
   };
 
-  // const mousePressed = (p5, x, y) => {
-  //   curves.push(createFFCurve(x, y, p5.random(5, 20)));
-  // }
 
   return <Sketch setup={setup} draw={draw} />;
 }

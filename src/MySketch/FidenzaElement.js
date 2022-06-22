@@ -1,3 +1,4 @@
+import palettes from "./ColorPalettes";
 
 export default function createFidenzaElement(p5, x, y, c, length, speed, flowField) {
     return {
@@ -6,8 +7,8 @@ export default function createFidenzaElement(p5, x, y, c, length, speed, flowFie
         speed: speed,
         color: c,
 
-        display() {
-            p5.fill(c);
+        display1() {
+            p5.noFill();
             p5.stroke(c);
             p5.strokeWeight(1);
             p5.beginShape();
@@ -17,8 +18,27 @@ export default function createFidenzaElement(p5, x, y, c, length, speed, flowFie
             for (let i = 0; i < this.length; i++) {
                 p5.curveVertex(drawCursor.x, drawCursor.y);
                 const v = flowField.get(drawCursor.x, drawCursor.y);
-                p5.circle(drawCursor.x, drawCursor.y, v.mag()*25 - 5);
+                p5.circle(drawCursor.x, drawCursor.y, v.mag()*8 - 3);
                 drawCursor.add(v.mult(this.speed));
+            }
+            p5.noFill();
+            p5.endShape();
+        },
+
+        display2() {
+            p5.noFill();
+            p5.stroke(c);
+            p5.strokeWeight(1);
+            p5.beginShape();
+            let drawCursor = p5.createVector(this.pos.x, this.pos.y);
+
+            p5.curveVertex(drawCursor.x, drawCursor.y);
+            for (let i = 0; i < this.length*5; i++) {
+                p5.curveVertex(drawCursor.x, drawCursor.y);
+                let v = flowField.get(drawCursor.x, drawCursor.y);
+                v.normalize();
+                //p5.strokeWeight(v.mag()*20);
+                drawCursor.add(v.mult(5));//this.speed
             }
             p5.noFill();
             p5.endShape();

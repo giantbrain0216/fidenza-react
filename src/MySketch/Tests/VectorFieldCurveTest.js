@@ -8,6 +8,7 @@ import { useControls } from "leva";
 import palettes from "../ColorPalettes";
 
 let vectorField;
+let currentCurve;
 let elements = [];
 
 export default function VectorFieldPerlinTest(props) {
@@ -34,6 +35,14 @@ export default function VectorFieldPerlinTest(props) {
 
     isColorDrawn: false,
     isLengthDrawn: false,
+
+    colorPalette: {options: {
+      subtle: palettes.subtle,
+      earthTone1: palettes.earthTone1,
+      earthTone2: palettes.earthTone2,
+      warmRainbow: palettes.warmRainbow
+    }},
+    strokeWeight: 1,
   });
 
   const setup = (p5, canvasParentRef) => {
@@ -72,24 +81,35 @@ export default function VectorFieldPerlinTest(props) {
     vectorField.drawMode = controls.drawMode;
     vectorField.drawVecScale = controls.drawVecScale;
 
-    p5.background(40);
+    p5.background(30);
     //p5.circle(50, 50, 40);
     vectorField.setupPerlin();
+
+    if (currentCurve) {
+      currentCurve.pos.x = p5.mouseX;
+      currentCurve.pos.y = p5.mouseY;
+      currentCurve.length += 0.3;
+    }
 
     if(controls.showVecField) {
       vectorField.drawVisualizer();
     }
 
     for (let element of elements) {
-      element.display();
+      element.display2();
     }
   };
 
   const mousePressed = (p5) => {
     if (p5.mouseX > 50 && p5.mouseX < 750 && p5.mouseY > 50 && p5.mouseY < 750){
-      elements.push(createFidenzaElement(p5, p5.mouseX, p5.mouseY, p5.color(p5.random(palettes.subtle)), p5.random(50), p5.random(20), vectorField)) ;
+      currentCurve = createFidenzaElement(p5, p5.mouseX, p5.mouseY, p5.color(p5.random(controls.colorPalette)), 1, p5.random(20), vectorField);
+      elements.push(currentCurve);
     } 
   }
 
-  return <Sketch setup={setup} draw={draw} mousePressed={mousePressed} />;
+  const mouseReleased = (p5) => {
+    currentCurve = null;
+  }
+
+  return <Sketch setup={setup} draw={draw} mousePressed={mousePressed} mouseReleased = {mouseReleased} />;
 }
